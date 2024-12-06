@@ -76,4 +76,4 @@ kubectl apply -f client-deployment.yml
 
 http://localhost:5000/
 
-http://172.210.92.67:3000/
+http://localhost:3000/
