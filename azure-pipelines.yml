@@ -5,7 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
  
 variables:
-  dockerRegistryServiceConnection: '<Your Azure Container Registry Service Connection>'
+
   imageNameClient: 'mern-app-client'
   imageNameServer: 'mern-app-server'
  
@@ -18,7 +18,7 @@ stages:
     - task: Docker@2
       displayName: Build and Push Client Docker Image
       inputs:
-        containerRegistry: $(dockerRegistryServiceConnection)
+        
         repository: $(imageNameClient)
         command: buildAndPush
         Dockerfile: '**/client.dockerfile'
@@ -28,7 +28,7 @@ stages:
     - task: Docker@2
       displayName: Build and Push Server Docker Image
       inputs:
-        containerRegistry: $(dockerRegistryServiceConnection)
+        
         repository: $(imageNameServer)
         command: buildAndPush
         Dockerfile: '**/server.dockerfile'
