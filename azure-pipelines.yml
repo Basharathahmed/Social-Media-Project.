@@ -1,23 +1,36 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - main
-
+ 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
+ 
+variables:
+  dockerRegistryServiceConnection: '<Your Azure Container Registry Service Connection>'
+  imageNameClient: 'mern-app-client'
+  imageNameServer: 'mern-app-server'
+ 
+stages:
+- stage: Build
+  displayName: Build Docker Images
+  jobs:
+  - job: Build
+    steps:
+    - task: Docker@2
+      displayName: Build and Push Client Docker Image
+      inputs:
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageNameClient)
+        command: buildAndPush
+        Dockerfile: '**/client.dockerfile'
+        tags: |
+          $(Build.BuildId)
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
-- task: Docker@2
-  inputs:
-    command: 'buildAndPush'
-    Dockerfile: '**/dockerfile'
+    - task: Docker@2
+      displayName: Build and Push Server Docker Image
+      inputs:
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageNameServer)
+        command: buildAndPush
+        Dockerfile: '**/server.dockerfile'
+        tags: |
+          $(Build.BuildId)
